@@ -588,6 +588,9 @@ namespace filter
             bghat = bghat + x.template block<3, 1> (3,0);
             x.template block<3, 1> (3,0) = Eigen::Matrix <_Scalar, 3, 1>::Zero();
 
+            //Sascha's sugestion to stop the yaw drift ( same fix was done in germany )
+            bghat.z() = 0;
+
             if (_Accelerometers)
             {
                 bahat = bahat + x.template block<3, 1> (6,0);
