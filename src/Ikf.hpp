@@ -589,7 +589,7 @@ namespace filter
             x.template block<3, 1> (3,0) = Eigen::Matrix <_Scalar, 3, 1>::Zero();
 
             //Sascha's sugestion to stop the yaw drift ( same fix was done in germany )
-            bghat.z() = 0;
+            bghat = Eigen::Vector3d::Zero();
 
             if (_Accelerometers)
             {
