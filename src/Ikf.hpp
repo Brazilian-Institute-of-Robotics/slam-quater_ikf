@@ -430,6 +430,10 @@ namespace filter
                 std::cout<<"g_body:\n"<<gtilde_body<<"\n";
                 #endif
 
+                auxvector << 1, 1, 0;
+                Eigen::Matrix<_Scalar, 3, 3> rot_inv = q4.matrix().inverse();
+                auxM = Eigen::Matrix<_Scalar, IKFSTATEVECTORSIZE, IKFSTATEVECTORSIZE>::Zero();
+                auxM.template block<3, 3>(0,0) = rot_inv * auxvector.asDiagonal() * rot_inv.transpose();
                 /** The adaptive algorithm **/
                 R1 = adapAttAcc->matrix (x, P, z1, H1, Ra);
 
@@ -438,7 +442,7 @@ namespace filter
                 Eigen::Matrix<_Scalar, 3, 3> S1, S1_inverse;
                 S1 = H1 * P1 * H1.transpose() + R1;
                 S1_inverse = S1.inverse();
-                K1 = P1 * H1.transpose() * S1_inverse;
+                K1 = auxM * P1 * H1.transpose() * S1_inverse;
                 Eigen::Matrix<_Scalar, 3, 1> innovationAcc = (z1 - H1 * x);
 
                 /** Update the state vector and the covariance matrix **/
